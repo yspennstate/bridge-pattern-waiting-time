@@ -1,0 +1,372 @@
+\documentclass[11pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\BR}{\mathrm{BR}}
+\newcommand{\one}{\mathbf 1}
+
+\hypersetup{pdftitle={The waiting time for a bridge pattern in simple random walk},pdfauthor={Yitzchak Shmalo}}
+
+\title[Waiting for a bridge pattern]{The waiting time for a bridge pattern in simple random walk}
+\author{Yitzchak Shmalo}
+\address{Einstein Institute of Mathematics, The Hebrew University of Jerusalem, Jerusalem, Israel}
+\email{yitzchak.shmalo@gmail.com}
+\date{November 2026}
+\subjclass[2020]{60G50, 60G15, 60F05, 68R15}
+\keywords{simple random walk, pattern waiting time, Brownian bridge, Slepian process, matching matrix}
+
+\begin{document}
+\begin{abstract}
+Fix $\lambda\in\R$ and let $T_n$ be the first time at which the last $n$ steps of a simple symmetric random walk form a bridge from $0$ to the level nearest $\lambda\sqrt n$ of the right parity. Pitman and Tang showed that $\EE T_n$ is of order $n$ and asked for its exact asymptotics. We prove that $\EE T_n\sim\gamma_\lambda n$, where $\gamma_\lambda=1+\EE F_\lambda$ and $F_\lambda$ is the first time at which the Slepian process $B(t+1)-B(t)$ hits $\lambda$. The constant is given by a convergent series of finite-dimensional integrals of determinants of heat kernels, obtained from Shepp's formulas for the Slepian process, with an explicit bound on the remainder. Numerically $\gamma_0\approx1.5439$ and $\gamma_1\approx2.4135$. We also show that the column sums of the matching matrix of Pitman and Tang, averaged with the law of the first bridge that occurs, converge after scaling to a functional of the path that follows the first hit; averaging them uniformly over the bridges gives a different limit.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+Let $S_0=0$ and $S_t=\xi_1+\dots+\xi_t$, where the $\xi_i$ are independent and equal to $\pm1$ with probability $1/2$ each. A \emph{word} of length $n$ is a nearest-neighbour path $w=(w(0),\dots,w(n))$ with $w(0)=0$; its letters are $w(j)-w(j-1)$, $1\le j\le n$. The waiting time for a set $A$ of words of length $n$ is
+\[
+T(A)=\inf\bigl\{t\ge n:(S_{t-n+i}-S_{t-n})_{0\le i\le n}\in A\bigr\},
+\]
+the first time at which the last $n$ steps of the walk form a word in $A$. For a single word the classical theory of Li \cite{Li}, Gerber and Li \cite{GL} and Guibas and Odlyzko \cite{GO} computes $\EE T(A)$ through the overlaps of the word with itself. Pitman and Tang \cite{PT} studied the waiting times of families of words that a scaled walk would recognise as a Brownian path of a given type: excursions, bridges, meanders and first-passage paths.
+
+For $\lambda\in\R$ and $n\ge1$, let $\lambda_n=\lfloor\lambda\sqrt n\rfloor$ if $\lfloor\lambda\sqrt n\rfloor$ has the parity of $n$, and $\lambda_n=\lfloor\lambda\sqrt n\rfloor+1$ otherwise. The bridge words are
+\[
+\BR_{\lambda,n}=\{w:\ w(n)=\lambda_n\},
+\]
+and we write $T_n=T(\BR_{\lambda,n})$ and $F_n=T_n-n$, the first time $k\ge0$ with $S_{k+n}-S_k=\lambda_n$. Pitman and Tang \cite[Theorem~1.8]{PT} proved that $\EE T_n$ lies between two constant multiples of $n$, and asked for its exact asymptotics \cite[Open problem~2.3]{PT}; in the published version this is \cite[Open Problem~1]{PTpub}. For $\lambda=0$ they also proved \cite[Proposition~2.4]{PT} that $F_n/n$ converges in law, together with the path that follows time $F_n$, which gives a lower bound for $\liminf_n\EE T_n/n$.
+
+The limit is described by the \emph{Slepian process}. Let $B$ be a standard Brownian motion and
+\[
+Z(t)=B(t+1)-B(t),\qquad F_\lambda=\inf\{t\ge0:Z(t)=\lambda\}.
+\]
+The process $Z$ is stationary and Gaussian with covariance $(1-|t|)^+$; it was studied by Slepian \cite{Slepian} and Shepp \cite{Shepp}, and its zero set by Pitman and Tang \cite{PTS}.
+
+\begin{theorem}\label{thm:main}
+Fix $\lambda\in\R$. Then $T_n/n$ converges in law to $1+F_\lambda$, the moments $\EE(T_n/n)^p$ are bounded in $n$ for every $p>0$, and
+\begin{equation}\label{eq:main}
+\EE T_n\sim\gamma_\lambda n,\qquad \gamma_\lambda=1+\EE F_\lambda.
+\end{equation}
+Moreover $1<\gamma_\lambda<\infty$ and $\gamma_{-\lambda}=\gamma_\lambda$.
+\end{theorem}
+
+Convergence in law alone gives only $\liminf_n\EE T_n/n\ge\gamma_\lambda$, by Fatou's lemma; this is how \cite[Proposition~2.4]{PT} is used there for $\lambda=0$. What is needed in addition is a tail bound for $F_n/n$ that is uniform in $n$. It comes from the lattice structure of the window sums $S_{k+n}-S_k$: they all have the parity of $\lambda_n$ and move by $0$ or $\pm2$ when $k$ increases by one, so they cannot pass from one side of $\lambda_n$ to the other without taking the value $\lambda_n$. Comparing the independent sums over the disjoint windows starting at $0,n,2n,\dots$ gives
+\begin{equation}\label{eq:tail-intro}
+\PP(F_n>kn)\le\PP(S_n<\lambda_n)^{k+1}+\PP(S_n>\lambda_n)^{k+1},\qquad k\ge0,
+\end{equation}
+and the right side is at most $2\rho^{k+1}$ for some $\rho<1$ and all large $n$. The same lattice structure makes the first hitting time of $\lambda_n/\sqrt n$ by the scaled window sums exactly $F_n/n$, so the first hitting time passes to the limit as soon as the Slepian process crosses the level immediately after hitting it, which follows from its local absolute continuity with respect to Brownian motion \cite[Lemma~2.3]{PTS}.
+
+The constant can be written out. Let $\phi_t(x)=(2\pi t)^{-1/2}e^{-x^2/(2t)}$, $\phi=\phi_1$, and let $\Phi$ be the standard normal distribution function. For $h\in\R$, an integer $m\ge0$ and $0<\theta<1$, put $x_0=0$ and
+\begin{equation}\label{eq:H}
+H_h(m+\theta)=\int_{0<x_1<\dots<x_{m+1}}\ \int_{y_0<\dots<y_{m+1}}\det\bigl[\phi_\theta(y_j-x_i)\bigr]_{i,j=0}^{m+1}\det\bigl[\phi_{1-\theta}(x_{j+1}-h-y_i)\bigr]_{i,j=0}^{m}\,dy\,dx,
+\end{equation}
+where $dy=dy_0\cdots dy_{m+1}$ and $dx=dx_1\cdots dx_{m+1}$. Put also
+\begin{equation}\label{eq:rh}
+r_h=\Phi(h)^2-h\phi(h)\Phi(h)-\phi(h)^2.
+\end{equation}
+
+\begin{theorem}\label{thm:series}
+For every $h\in\R$ and $t>0$ with $t\notin\Z$, $\PP(Z(u)<h\text{ for }0\le u\le t)=H_h(t)$. Consequently
+\begin{equation}\label{eq:series}
+\gamma_\lambda=1+\sum_{m=0}^\infty\int_0^1\bigl\{H_\lambda(m+\theta)+H_{-\lambda}(m+\theta)\bigr\}\,d\theta .
+\end{equation}
+Moreover $0<r_h<1$, $H_h(t)\le r_h^{\lfloor(t+1)/2\rfloor}$, and the terms of \eqref{eq:series} with $m\ge M$ add up to at most $R_\lambda(M)+R_{-\lambda}(M)$, where $R_h(M)=r_h^{M/2}(1+r_h)/(1-r_h)$ for even $M$ and $R_h(M)=2r_h^{(M+1)/2}/(1-r_h)$ for odd $M$.
+\end{theorem}
+
+The integrals \eqref{eq:H} are the unconditional form of Shepp's formulas \cite[(2.25)--(2.26)]{Shepp} for the probability that $Z$ stays below a level, and $H_h(1)=r_h$; the integer case is \cite[(2.15)--(2.16)]{Shepp}. The new content of Theorem~\ref{thm:series} is the identification of $\gamma_\lambda$ with the sum, together with the remainder bound, which makes the constant computable to any accuracy. Section~\ref{sec:numerics} gives $\gamma_0\approx1.5439$ and $\gamma_1\approx2.4135$.
+
+Pitman and Tang asked for the asymptotics through their matching matrix. For a set $A=\{A_1,\dots,A_k\}$ of distinct words of length $n$ and $0\le s<n$, let $\chi_s(A_i,A_j)=1$ if the first $n-s$ letters of $A_i$ are the last $n-s$ letters of $A_j$, and $\chi_s(A_i,A_j)=0$ otherwise, and put
+\begin{equation}\label{eq:M}
+M_{ij}=\sum_{s=0}^{n-1}2^{-s}\chi_s(A_i,A_j).
+\end{equation}
+By \cite[Theorem~2.1]{PT} the matrix $M$ is invertible and $\EE T(A)=2^n/(\one^\top M^{-1}\one)$. Let $W^*(u)=B(F_\lambda+u)-B(F_\lambda)$, $0\le u\le1$, be the path that follows the first hit; it runs from $0$ to $\lambda$.
+
+\begin{corollary}\label{cor:matching}
+Let $M_n$ be the matrix \eqref{eq:M} of $\BR_{\lambda,n}$. Then $n2^{-n}\one^\top M_n^{-1}\one\to1/\gamma_\lambda$, and
+\begin{equation}\label{eq:weights}
+\gamma_\lambda=\frac1{\phi(\lambda)}\,\EE\int_0^1\phi_t\bigl(W^*(t)\bigr)\,dt .
+\end{equation}
+\end{corollary}
+
+The first statement is a restatement of \eqref{eq:main}. The second is proved in Section~\ref{sec:matching} by passing to the limit in an exact identity, \eqref{eq:mean-col} below, which expresses $\EE T_n$ through the column sums of $M_n$ averaged with the law of the first bridge that occurs. The law of that bridge matters: for $\lambda=0$, replacing $W^*$ in \eqref{eq:weights} by a standard Brownian bridge $Y$, for which $\EE\phi_t(Y(t))=(2\pi t(2-t))^{-1/2}$, gives
+\[
+\frac1{\phi(0)}\int_0^1\frac{dt}{\sqrt{2\pi t(2-t)}}=\int_0^1\frac{dt}{\sqrt{t(2-t)}}=\frac\pi2\approx1.5708,
+\]
+which differs from $\gamma_0\approx1.5439$. Like the bounds of \cite{PT}, our proof identifies the limit through the scaling limit of the walk; Pitman and Tang note \cite[after Open problem~2.3]{PT} that an argument that analyses the matching matrix alone would be of independent interest, and we do not give one.
+
+The second part of \cite[Open problem~2.3]{PT} concerns the first-passage words $\mathrm{FP}_{\lambda,n}$, $\lambda<0$, whose last point is a strict minimum. For them \cite[Theorem~1.1]{Shm} shows that $\EE T(\mathrm{FP}_{\lambda,n})$ is of order $n\log n$, which proves a conjecture of Peres \cite[Conjecture~1]{PTpub}, so there is no limit on the scale $n$; whether $\EE T(\mathrm{FP}_{\lambda,n})/(n\log n)$ converges is open. The argument there rests on descending ladder times and does not apply to bridges, whose occurrences do not cluster in this way.
+
+The paper is organised as follows.
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Section & Content & Main statement\\
+\midrule
+\ref{sec:identities} & exact identities for the matching matrix & Lemmas~\ref{lem:matching}, \ref{lem:column}\\
+\ref{sec:slepian} & the Slepian process & Lemma~\ref{lem:slepian}\\
+\ref{sec:proof} & convergence in law and of the means & Theorem~\ref{thm:main}\\
+\ref{sec:matching} & limits of the matching sums & Corollary~\ref{cor:matching}\\
+\ref{sec:series} & the series for $\gamma_\lambda$ & Theorem~\ref{thm:series}\\
+\ref{sec:numerics} & exact and numerical values & Tables~\ref{tab:exact}, \ref{tab:mc}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Throughout, $C$ denotes a positive absolute constant whose value may change from line to line, and $x_n\sim y_n$ means $x_n/y_n\to1$.
+
+\section{The matching identities}\label{sec:identities}
+
+Let $A=\{A_1,\dots,A_k\}$ be a set of distinct words of length $n$, let $e=\EE T(A)$, and let $\pi_j$ be the probability that the word formed at time $T(A)$ is $A_j$. Splitting the steps into disjoint blocks of length $n$ shows that $T(A)$ has a geometric tail, so $e<\infty$.
+
+\begin{lemma}\label{lem:matching}
+With $M$ as in \eqref{eq:M} and $\pi=(\pi_1,\dots,\pi_k)^\top$,
+\begin{equation}\label{eq:Mpi}
+M\pi=\frac e{2^n}\one,\qquad e=\frac{2^n}{\one^\top M^{-1}\one}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+This is the martingale argument of Li \cite{Li}. Fix $i$. Just before each time $t=1,2,\dots$ a gambler arrives with capital $1$ and bets it on the next letter being the first letter of $A_i$, at fair odds; if he wins, he bets his whole capital on the next letter being the second letter of $A_i$, and he continues in this way until he loses or has seen all of $A_i$. The total capital of the gamblers minus the number of arrivals is a martingale. Its increments are bounded by $2^{n+2}$ up to time $T(A)$, and $\EE T(A)<\infty$, so by optional stopping the expected total capital at time $T(A)$ equals $\EE T(A)$. If the word formed at time $T(A)$ is $A_j$, the gamblers still holding capital are those who arrived at a time $T(A)-n+s+1$ with $\chi_s(A_i,A_j)=1$, and such a gambler holds $2^{n-s}$; no gambler has seen all of $A_i$ before time $T(A)$. Hence the total capital is $2^nM_{ij}$, and $\sum_jM_{ij}\pi_j=e/2^n$. Since $M$ is invertible \cite[Theorem~2.1]{PT}, $\pi=e2^{-n}M^{-1}\one$, and $\one^\top\pi=1$ gives the formula for $e$.
+\end{proof}
+
+\begin{remark}\label{rem:PT}
+The formula for $e$ is \cite[(2.4)]{PT}. The vector $2^{-n}M^{-1}\one$ has entries $\pi_j/\EE T(A)$, the probability that $A_j$ is the first word of $A$ to occur divided by $\EE T(A)$; these are not in general the reciprocals of the waiting times $\EE T(\{A_j\})$ of the single words, as stated in \cite[(2.3)]{PT}. For $A=\{+-,-+\}$ one has $M=\bigl(\begin{smallmatrix}1&1/2\\1/2&1\end{smallmatrix}\bigr)$, $2^{-n}M^{-1}\one=(1/6,1/6)^\top$, $\EE T(A)=3$ and $\pi=(1/2,1/2)$, while $\EE T(\{+-\})=\EE T(\{-+\})=4$.
+\end{remark}
+
+For a word $w$ of length $n$ and the family $A=\BR_{\lambda,n}$, let $C_n(w)=\sum_{i}M_{ij}$ when $w=A_j$, the $j$-th column sum. Let $p_s(b)=\PP(S_s=b)$ for integers $s\ge0$ and $b$, so that $p_0(0)=1$ and $p_s(b)=0$ unless $b\equiv s\pmod 2$.
+
+\begin{lemma}\label{lem:column}
+For every $w\in\BR_{\lambda,n}$,
+\begin{equation}\label{eq:column}
+C_n(w)=\sum_{s=0}^{n-1}p_s\bigl(w(s)\bigr).
+\end{equation}
+Let $W_n$ be the word formed at time $T_n$. Then
+\begin{equation}\label{eq:mean-col}
+p_n(\lambda_n)\,\EE T_n=\EE C_n(W_n).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For fixed $s$, the words $A_i\in\BR_{\lambda,n}$ with $\chi_s(A_i,w)=1$ are the words whose first $n-s$ letters are the last $n-s$ letters of $w$, which add up to $w(n)-w(s)=\lambda_n-w(s)$, and whose last $s$ letters add up to $\lambda_n-(\lambda_n-w(s))=w(s)$. There are $2^sp_s(w(s))$ of them, which gives \eqref{eq:column}. Summing the $k$ equations \eqref{eq:Mpi} gives $\sum_jC_n(A_j)\pi_j=ke/2^n$, which is \eqref{eq:mean-col} because $k2^{-n}=|\BR_{\lambda,n}|2^{-n}=p_n(\lambda_n)$.
+\end{proof}
+
+We use two estimates for $p_s(b)$. First,
+\begin{equation}\label{eq:gauss}
+p_s(b)\le Cs^{-1/2}e^{-b^2/(4s)}\qquad(s\ge1,\ b\in\Z).
+\end{equation}
+For $s=2k$ and $b=2j$ with $0\le j\le k$,
+\[
+\frac{p_{2k}(2j)}{p_{2k}(0)}=\prod_{r=1}^{j}\frac{k-r+1}{k+r}=\prod_{r=1}^{j}\Bigl(1-\frac{2r-1}{k+r}\Bigr)\le\exp\Bigl(-\sum_{r=1}^j\frac{2r-1}{k+j}\Bigr)=e^{-j^2/(k+j)}\le e^{-j^2/(2k)},
+\]
+and $j^2/(2k)=b^2/(4s)$; the odd case is the same with $p_{2k+1}(1)$ in place of $p_{2k}(0)$ and gives $e^{-(b^2-1)/(4s)}$. Since $p_s(0)$ and $p_s(1)$ are at most $Cs^{-1/2}$ by Stirling's formula, and $p_s(-b)=p_s(b)$, this proves \eqref{eq:gauss}. Second, the local limit theorem: for every $\delta\in(0,1]$,
+\begin{equation}\label{eq:llt}
+\sup_{\delta n\le s\le n}\ \sup_{b\equiv s\ (2)}\bigl|\sqrt n\,p_s(b)-2\phi_{s/n}(b/\sqrt n)\bigr|\	o0\qquad(n\to\infty).
+\end{equation}
+Indeed $\phi_{s/n}(b/\sqrt n)=\sqrt n\,\phi_s(b)$, Stirling's formula gives $p_s(b)=2\phi_s(b)(1+o(1))$ uniformly in $|b|\le K\sqrt s$ as $s\to\infty$, and for $|b|>K\sqrt s$ both $\sqrt n\,p_s(b)$ and $2\sqrt n\,\phi_s(b)$ are at most $C\delta^{-1/2}e^{-K^2/4}$ by \eqref{eq:gauss}; then let $K\to\infty$. In particular $\sqrt n\,p_n(\lambda_n)\to2\phi(\lambda)$.
+
+\section{The Slepian process}\label{sec:slepian}
+
+\begin{lemma}\label{lem:slepian}
+Let $Z$ and $F_\lambda$ be as in Section~\ref{sec:intro}.
+\begin{enumerate}
+\item The variables $Z(0),Z(1),Z(2),\dots$ are independent standard normal.
+\item For every $t\ge0$ the law of $(Z(t+u))_{0\le u\le1}$ on $C[0,1]$ is mutually absolutely continuous with respect to the law of $(\xi+\sqrt2\,\beta(u))_{0\le u\le1}$, where $\beta$ is a standard Brownian motion and $\xi$ is an independent standard normal variable.
+\item Almost surely $Z(0)\ne\lambda$, $F_\lambda<\infty$, and every interval $(F_\lambda,F_\lambda+\varepsilon)$ contains times $u$ with $Z(u)<\lambda$ and times $u$ with $Z(u)>\lambda$.
+\item $\PP(F_\lambda>t)\le\Phi(\lambda)^{\lfloor t\rfloor+1}+(1-\Phi(\lambda))^{\lfloor t\rfloor+1}$ for $t\ge0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part (1) holds because $Z(j)$ is the increment of $B$ over $[j,j+1]$. Part (2) is \cite[Lemma~2.3]{PTS} (see also \cite[Lemma~2.5]{PT}); we include the short argument. By stationarity take $t=0$. Write $B(u)=uU+U^\circ(u)$ and $B(1+u)-B(1)=uV+V^\circ(u)$ for $0\le u\le1$, where $U=B(1)$, $V=B(2)-B(1)$, and $U^\circ,V^\circ$ are standard Brownian bridges; the four are independent. Then
+\[
+Z(u)=(1-u)U+uV+V^\circ(u)-U^\circ(u),\qquad 0\le u\le1,
+\]
+and $V^\circ-U^\circ$ is $\sqrt2$ times a standard Brownian bridge, independent of $(Z(0),Z(1))=(U,V)$. The process $X=\xi+\sqrt2\beta$ has the same structure: given $X(0)=x$ and $X(1)=y$ it is $(1-u)x+uy$ plus $\sqrt2$ times an independent standard bridge. So the two laws on $C[0,1]$ are mixtures of the same family of conditional laws, indexed by the endpoints, and the endpoint laws, of $(U,V)$ and of $(\xi,\xi+\sqrt2\beta(1))$, both have everywhere positive densities on $\R^2$. Hence the laws are mutually absolutely continuous.
+
+For part (3), $Z(0)$ is normal, so $Z(0)\ne\lambda$ almost surely, and by part (1) some $Z(j)$ lies below $\lambda$ and some lies above it, so $F_\lambda<\infty$ by continuity. Fix an integer $k\ge0$ and let $\sigma_k$ be the first time in $[k,k+1]$ at which $Z$ equals $\lambda$, if there is one. For the process $X$ of part (2), the corresponding time is a stopping time, and by the strong Markov property and the fact that Brownian motion started at a point visits both sides of it in every interval $(0,\varepsilon)$, the path of $X$ visits both sides of $\lambda$ in every interval to the right of it, almost surely. This is an event of the path on $[0,1]$, so by part (2) the same holds for $Z$ and $\sigma_k$. Since $F_\lambda=\sigma_k$ for the integer $k$ with $F_\lambda\in[k,k+1)$, part (3) follows by taking the union over $k$. Part (4): if $F_\lambda>t$, then $Z(0),\dots,Z(\lfloor t\rfloor)$ lie on the same side of $\lambda$, and part (1) applies.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+Let $\widehat S_n(t)=n^{-1/2}S_{nt}$, with $S$ linearly interpolated between integer times, and $Z_n(t)=\widehat S_n(t+1)-\widehat S_n(t)$. On each interval $[k/n,(k+1)/n]$ both $\widehat S_n(t)$ and $\widehat S_n(t+1)$ are linear, so $Z_n$ is linear there. The values $\sqrt n\,Z_n(k/n)=S_{k+n}-S_k$ all have the parity of $\lambda_n$, and consecutive ones differ by $0$ or $\pm2$; so if neither of two consecutive values equals $\lambda_n$, both lie on the same side of $\lambda_n$, and $Z_n$ does not reach $\lambda_n/\sqrt n$ between them. Hence
+\begin{equation}\label{eq:hit}
+F_n/n=\inf\{t\ge0:Z_n(t)=\lambda_n/\sqrt n\}.
+\end{equation}
+
+\emph{Convergence in law.} By Donsker's theorem \cite{Bil}, $\widehat S_n\to B$ in law in $C[0,\infty)$ with the topology of uniform convergence on compact sets. By the Skorokhod representation theorem \cite{Bil} we may assume that $\widehat S_n\to B$ almost surely, uniformly on compact sets; then $Z_n\to Z$ in the same way, and $\lambda_n/\sqrt n\to\lambda$. On the almost sure event of Lemma~\ref{lem:slepian}(3), $F_n/n\to F_\lambda$. Indeed, fix $\varepsilon>0$. The continuous function $Z-\lambda$ has no zero on the compact set $[0,F_\lambda-\varepsilon]$, so $|Z_n-\lambda_n/\sqrt n|$ is bounded below there for large $n$, and $F_n/n>F_\lambda-\varepsilon$. There is a time $u\in(F_\lambda,F_\lambda+\varepsilon)$ at which $Z(u)-\lambda$ has the sign opposite to that of $Z(0)-\lambda$; for large $n$ the same holds for $Z_n(u)-\lambda_n/\sqrt n$ and $Z_n(0)-\lambda_n/\sqrt n$, so $F_n/n<F_\lambda+\varepsilon$ by the intermediate value theorem. Moreover
+\begin{equation}\label{eq:after}
+W_n^*(u):=\widehat S_n(F_n/n+u)-\widehat S_n(F_n/n)\	o W^*(u)=B(F_\lambda+u)-B(F_\lambda)
+\end{equation}
+uniformly in $u\in[0,1]$, by the uniform convergence of $\widehat S_n$ on compact sets and the uniform continuity of $B$. In particular $T_n/n=1+F_n/n\to1+F_\lambda$ in law.
+
+\emph{Uniform integrability.} Let $q_n=\PP(S_n<\lambda_n)$ and $r_n=\PP(S_n>\lambda_n)$. The sums $S_{jn+n}-S_{jn}$, $j=0,1,\dots,k$, are independent and distributed as $S_n$. If $F_n>kn$, then no window starting at a time in $\{0,\dots,kn\}$ is a bridge, so by the parity argument above all the sums $S_{i+n}-S_i$, $0\le i\le kn$, lie strictly on one side of $\lambda_n$, and in particular the $k+1$ independent ones do. Hence
+\begin{equation}\label{eq:tail}
+\PP(F_n>kn)\le q_n^{k+1}+r_n^{k+1},\qquad k\ge0.
+\end{equation}
+By the central limit theorem $q_n\to\Phi(\lambda)$ and $r_n\to1-\Phi(\lambda)$, so there are $\rho<1$ and $n_0$ with $\max(q_n,r_n)\le\rho$ for $n\ge n_0$. Then $\PP(F_n/n>k)\le2\rho^{k+1}$ for all $k\ge0$ and $n\ge n_0$, so $\sup_n\EE(F_n/n)^p<\infty$ for every $p>0$, the family $(F_n/n)$ is uniformly integrable, and $\EE F_n/n\to\EE F_\lambda$. This proves \eqref{eq:main}.
+
+Finally $F_\lambda>0$ almost surely and $\EE F_\lambda<\infty$ by Lemma~\ref{lem:slepian}(3),(4), so $1<\gamma_\lambda<\infty$; and $-Z$ has the law of $Z$, so $F_{-\lambda}$ has the law of $F_\lambda$ and $\gamma_{-\lambda}=\gamma_\lambda$.\qed
+
+\section{The matching sums: proof of Corollary~\ref{cor:matching}}\label{sec:matching}
+
+For a word $w$ of length $n$ let $\widehat w(t)=n^{-1/2}w(nt)$, $0\le t\le1$, linearly interpolated, and for $f\in C[0,1]$ put
+\[
+K(f)=2\int_0^1\phi_t\bigl(f(t)\bigr)\,dt .
+\]
+Since $\phi_t(x)\le(2\pi t)^{-1/2}$, $K(f)\le 2\sqrt{2/\pi}$. We use the right side of \eqref{eq:column} as the definition of $C_n(w)$ for every word $w$.
+
+\begin{lemma}\label{lem:riemann}
+$\sup_wn^{-1/2}C_n(w)\le C$, the supremum being over all words of length $n$ and all $n$. If $w_n$ are words of length $n$ and $\widehat w_n\to f$ uniformly on $[0,1]$, then $n^{-1/2}C_n(w_n)\to K(f)$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:gauss}, $p_s(b)\le Cs^{-1/2}$ for $s\ge1$, so for $0<\delta\le1$
+\begin{equation}\label{eq:small}
+n^{-1/2}\sum_{0\le s<\delta n}p_s\bigl(w(s)\bigr)\le n^{-1/2}\Bigl(1+C\sum_{1\le s<\delta n}s^{-1/2}\Bigr)\le n^{-1/2}+C\sqrt\delta
+\end{equation}
+for every word $w$; with $\delta=1$ this is the first claim. For the second, also $2\int_0^\delta\phi_t(f(t))\,dt\le C\sqrt\delta$. For $\delta n\le s<n$, \eqref{eq:llt} gives
+\[
+n^{-1/2}p_s\bigl(w_n(s)\bigr)=\frac1n\Bigl\{2\phi_{s/n}\bigl(\widehat w_n(s/n)\bigr)+o(1)\Bigr\}
+\]
+uniformly in $s$. The function $(t,x)\mapsto\phi_t(x)$ is uniformly continuous on $[\delta,1]\times\R$, and $\widehat w_n\to f$ uniformly, so the sum over $\delta n\le s<n$ is a Riemann sum converging to $2\int_\delta^1\phi_t(f(t))\,dt$. Letting $\delta\to0$ proves the lemma.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:matching}]
+By Lemma~\ref{lem:matching}, $n2^{-n}\one^\top M_n^{-1}\one=n/\EE T_n$, which tends to $1/\gamma_\lambda$ by Theorem~\ref{thm:main}. The word $W_n$ formed at time $T_n$ is $(S_{F_n+i}-S_{F_n})_{0\le i\le n}$, so $\widehat W_n=W_n^*$. In the coupling of Section~\ref{sec:proof}, $W_n^*\to W^*$ uniformly on $[0,1]$ almost surely by \eqref{eq:after}, so $n^{-1/2}C_n(W_n)\to K(W^*)$ almost surely by Lemma~\ref{lem:riemann}, and by bounded convergence $n^{-1/2}\EE C_n(W_n)\to\EE K(W^*)$. By \eqref{eq:mean-col},
+\[
+\frac{\EE T_n}n=\frac{n^{-1/2}\,\EE C_n(W_n)}{\sqrt n\,p_n(\lambda_n)}\	o\frac{\EE K(W^*)}{2\phi(\lambda)},
+\]
+and comparing with \eqref{eq:main} gives \eqref{eq:weights}.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:series}}\label{sec:series}
+
+Since $Z$ is centred Gaussian, the process $Z'(u)=B(u)-B(u+1)=-Z(u)$ has the law of $Z$, so it suffices to compute $\PP(Z'(u)<h,\ 0\le u\le t)$. Write $t=m+\theta$ with $m\ge0$ an integer and $0<\theta<1$, and let $P_i(v)=B(i+v)+ih$ for $0\le v\le1$. For $u=i+v$ with $0\le v<1$, the inequality $Z'(u)<h$ reads $P_i(v)<P_{i+1}(v)$. As $u$ runs over $[0,m+\theta]$, the pairs $(i,v)$ that occur are $0\le i\le m$ with $v\in[0,\theta]$, and $0\le i\le m-1$ with $v\in(\theta,1)$. So $Z'<h$ on $[0,t]$ if and only if
+\begin{itemize}
+\item the $m+2$ paths $P_0,\dots,P_{m+1}$ are strictly increasing in $i$ at every $v\in[0,\theta]$, and
+\item the $m+1$ paths $P_0,\dots,P_m$ are strictly increasing in $i$ at every $v\in[\theta,1]$.
+\end{itemize}
+(At $v=1$ the second condition reads $B(i+1)+ih<B(i+2)+(i+1)h$, which is the first condition at $v=0$ for the next index and holds automatically when that one does.) Put $x_i=P_i(0)=B(i)+ih$ and $y_i=P_i(\theta)=B(i+\theta)+ih$, so that $x_0=0$ and $P_i(1)=x_{i+1}-h$. The pieces of $B$ on the intervals $[i,i+\theta]$, $0\le i\le m+1$, and $[i+\theta,i+1]$, $0\le i\le m$, are independent Brownian motions, and the joint density of $(y_0,x_1,y_1,\dots,x_{m+1},y_{m+1})$ is
+\[
+\prod_{i=0}^{m+1}\phi_\theta(y_i-x_i)\prod_{i=0}^m\phi_{1-\theta}(x_{i+1}-h-y_i).
+\]
+Given these values, the pieces are independent Brownian bridges. By the theorem of Karlin and McGregor \cite{KM}, for $q$ independent Brownian motions started at $u_0<\dots<u_{q-1}$ and run for time $\tau$, the density at $v_0<\dots<v_{q-1}$ of the end points on the event that no two of them meet is $\det[\phi_\tau(v_j-u_i)]_{i,j=0}^{q-1}$. (Expand the determinant over permutations; exchanging the paths after their first meeting is a measure-preserving involution on the paths that meet, which reverses the sign of the permutation, so only paths that never meet and end in the original order contribute.) Applying this to the two groups of pieces, and integrating over the ordered values $0<x_1<\dots<x_{m+1}$ and $y_0<\dots<y_{m+1}$, gives $\PP(Z'<h\text{ on }[0,t])=H_h(t)$. The order of the end points $x_{i+1}-h$ of the second group is that of the $x_{i+1}$, and the events of probability zero at which two paths touch without crossing do not change the probability, by Lemma~\ref{lem:slepian}(2) applied on each unit interval.
+
+Since $Z$ is continuous, $F_\lambda>t$ if and only if $Z<\lambda$ on $[0,t]$ or $Z>\lambda$ on $[0,t]$, and $\PP(Z>\lambda\text{ on }[0,t])=\PP(-Z<-\lambda\text{ on }[0,t])=H_{-\lambda}(t)$. Hence $\PP(F_\lambda>t)=H_\lambda(t)+H_{-\lambda}(t)$ for $t\notin\Z$, and \eqref{eq:series} follows from $\EE F_\lambda=\int_0^\infty\PP(F_\lambda>t)\,dt$ and Tonelli's theorem.
+
+For the remainder, we first compute $H_h(1)=\PP(Z<h\text{ on }[0,1])$. By the proof of Lemma~\ref{lem:slepian}(2), given $Z(0)=x<h$ and $Z(1)=y<h$, the process $Z$ on $[0,1]$ is a Brownian bridge with variance parameter $2$ from $x$ to $y$, which stays below $h$ with probability $1-e^{-(h-x)(h-y)}$. Since $Z(1)$ is standard normal and independent of $Z(0)$,
+\[
+\PP\bigl(Z<h\text{ on }[0,1]\bigm|Z(0)=x\bigr)=\int_{-\infty}^h\phi(y)\bigl(1-e^{-(h-x)(h-y)}\bigr)\,dy=\Phi(h)-\frac{\phi(h)}{\phi(x)}\Phi(x),
+\]
+by completing the square. Integrating against $\phi(x)\,dx$ over $x<h$ and using $\int_{-\infty}^h\Phi(x)\,dx=h\Phi(h)+\phi(h)$ gives $H_h(1)=r_h$. Clearly $0<r_h\le\Phi(h)<1$. The events that $Z<h$ on $[2j,2j+1]$, $j=0,1,\dots$, depend on the increments of $B$ on the disjoint intervals $[2j,2j+2]$, so they are independent, and $[0,t]$ contains $\lfloor(t+1)/2\rfloor$ of these intervals. Hence $H_h(t)\le r_h^{\lfloor(t+1)/2\rfloor}$, and
+\[
+\sum_{m\ge M}\int_0^1H_h(m+\theta)\,d\theta\le\int_M^\infty r_h^{\lfloor(t+1)/2\rfloor}\,dt=R_h(M),
+\]
+as one sees by summing the geometric series separately for even and odd $M$.\qed
+
+\section{Numerical values}\label{sec:numerics}
+
+No step of the proofs uses computation. Table~\ref{tab:exact} lists $\EE T_n$ for small $n$, computed from \eqref{eq:Mpi} and confirmed by solving the linear system of the automaton that reads the last $n-1$ letters. For $n\le8$ the values were computed in rational arithmetic; for example, for $\lambda=0$ and $n=2,3,4,5,6$ they are $3$, $31/6$, $85/14$, $64553/7800$ and $836953/91448$. For $\lambda=1$ the ratio $\EE T_n/n$ oscillates for small $n$ because $\lambda_n$ is a coarse approximation of $\sqrt n$. Table~\ref{tab:mc} gives Monte Carlo estimates of $\EE T_n/n$ with normal-approximation $95\%$ intervals.
+
+To evaluate \eqref{eq:series} we condition on the values $x_i$ and $y_i$ in Section~\ref{sec:series}: the integrand of \eqref{eq:H} is the product of the Gaussian density of these values and two Karlin--McGregor determinant ratios, which are bridge noncrossing probabilities, and $\theta$ is integrated as one more coordinate. Each slab $\int_0^1H_{\pm\lambda}(m+\theta)\,d\theta$ was estimated by randomized quasi-Monte Carlo with $2^{14}$ scrambled Sobol points, eight independent scramblings, and the slabs $m<12$ for $\lambda=0$ and $m<26$ for $\lambda=1$. This gives
+\[
+\gamma_0\approx1.54388\pm0.00019,\qquad\gamma_1\approx2.41351\pm0.00061,
+\]
+where $\pm$ is the standard error over the scramblings, not a certified bound. The omitted slabs contribute at most $1.4\times10^{-6}$ and $7.2\times10^{-5}$ by Theorem~\ref{thm:series}. The values agree with Table~\ref{tab:mc}, and $\gamma_0$ lies well below the bound $\gamma_0\le4$ recorded after \cite[Proposition~2.4]{PT}.
+
+For $\lambda=0$ the first slab can be checked in closed form. On $0<t<1$ the first zero of $Z$ has density $\pi^{-1}\sqrt{(2-t)/t}$; its integral over $(0,1)$ is $1/2+1/\pi=1-2r_0$, in agreement with \eqref{eq:rh}, and $\int_0^1\PP(F_0>t)\,dt=3/4-1/\pi\approx0.431690$, against the quadrature value $0.43157\pm0.00012$.
+
+\begin{table}[tbp]
+\centering
+\begin{tabular}{rrrrrrrrr}
+\toprule
+& \multicolumn{4}{c}{$\lambda=0$} & \multicolumn{4}{c}{$\lambda=1$}\\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+$n$ & $\lambda_n$ & $|\BR_{\lambda,n}|$ & $\EE T_n$ & $\EE T_n/n$ & $\lambda_n$ & $|\BR_{\lambda,n}|$ & $\EE T_n$ & $\EE T_n/n$\\
+\midrule
+2 & 0 & 2 & 3.000000 & 1.500000 & 2 & 1 & 6.000000 & 3.000000\\
+3 & 1 & 3 & 5.166667 & 1.722222 & 1 & 3 & 5.166667 & 1.722222\\
+4 & 0 & 6 & 6.071429 & 1.517857 & 2 & 4 & 9.019231 & 2.254808\\
+5 & 1 & 10 & 8.276026 & 1.655205 & 3 & 5 & 15.614051 & 3.122810\\
+6 & 0 & 20 & 9.152229 & 1.525371 & 2 & 15 & 12.080477 & 2.013413\\
+7 & 1 & 35 & 11.373769 & 1.624824 & 3 & 21 & 18.202415 & 2.600345\\
+8 & 0 & 70 & 12.236147 & 1.529518 & 2 & 56 & 15.154210 & 1.894276\\
+10 & 0 & 252 & 15.321474 & 1.532147 & 4 & 120 & 29.990388 & 2.999039\\
+12 & 0 & 924 & 18.407556 & 1.533963 & 4 & 495 & 32.455292 & 2.704608\\
+\bottomrule
+\end{tabular}
+\caption{Values of $\EE T_n$ from the matching identity, rounded to six decimals.}\label{tab:exact}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\begin{tabular}{rrrrrr}
+\toprule
+& \multicolumn{2}{c}{$\lambda=0$} & \multicolumn{3}{c}{$\lambda=1$}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-6}
+$n$ & trials & $\EE T_n/n$ & $\lambda_n$ & trials & $\EE T_n/n$\\
+\midrule
+64 & 20{,}000 & $1.5351\pm0.0087$ & 8 & 20{,}000 & $2.4081\pm0.0236$\\
+256 & 15{,}000 & $1.5530\pm0.0102$ & 16 & 15{,}000 & $2.4058\pm0.0267$\\
+1{,}024 & 10{,}000 & $1.5345\pm0.0120$ & 32 & 10{,}000 & $2.4012\pm0.0326$\\
+4{,}096 & 5{,}000 & $1.5529\pm0.0176$ & 64 & 5{,}000 & $2.3983\pm0.0472$\\
+16{,}384 & 2{,}500 & $1.5261\pm0.0243$ & 128 & 2{,}500 & $2.4160\pm0.0659$\\
+65{,}536 & 1{,}200 & $1.5523\pm0.0374$ & 256 & 1{,}200 & $2.4210\pm0.0934$\\
+\bottomrule
+\end{tabular}
+\caption{Monte Carlo estimates of $\EE T_n/n$, with half-widths of normal-approximation $95\%$ intervals; $\lambda_n=0$ for $\lambda=0$.}\label{tab:mc}
+\end{table}
+
+\section*{Acknowledgements and funding}
+The research presented in this paper was supported by the European Research
+Council (ERC) under the European Union's Horizon Europe research and
+innovation program (grant agreement No.~101041711), by the Simons
+Foundation as part of the Collaboration on the Mathematical and Scientific
+Foundations of Deep Learning, by Heights Labs, by Convex Nexus Capital, by
+the Israel Science Foundation (grant number 2258/19), and by the Israel
+Science Foundation (ISF Grant 4101/25). Computational resources were
+provided in part by Google Cloud through its education credits program
+(credit 530550103).
+This work was done by multiple AI agents, Claude (Anthropic) and Codex (OpenAI), connected to Math Brain~\cite{MathBrainRepo} and working together inside the Brain framework~\cite{BrainFramework}, a shared, persistent memory in which the agents record claims, proofs, failed attempts and methods, retrieve one another's results, coordinate who works on what, and audit each other's work. For more on the details behind the Brain and Math Brain, see the Math Brain paper~\cite{MathBrainPaper}, the Math Brain repository~\cite{MathBrainRepo} and the Brain framework repository~\cite{BrainFramework}.
+
+\section*{Declaration of competing interest}
+The author holds equity in Heights Labs and in Convex Nexus Capital and
+has a management role at Convex Nexus Capital. These entities are included
+in the funding declaration above.
+
+\section*{Declaration of generative AI and AI-assisted technologies}
+The paper comes out of Math Brain, an ongoing project on the use of AI systems for research mathematics. In November 2026 Codex (OpenAI, GPT-6.1) found the proofs of Theorems~\ref{thm:main} and \ref{thm:series} and Corollary~\ref{cor:matching} and carried out the computations, a second Codex instance reviewed the proofs and repeated the computations independently, and Claude Opus~5.5 (Anthropic), working in Claude Code, wrote the paper. The author directed the work and is responsible for the content of the paper and for decisions concerning its dissemination.
+
+\section*{Data availability}
+The programs that produce Tables~\ref{tab:exact} and \ref{tab:mc} and the values of $\gamma_0$ and $\gamma_1$, their outputs and the \LaTeX{} source of the paper are available at \url{https://github.com/yspennstate/bridge-pattern-waiting-time}.
+
+\begin{thebibliography}{99}
+\bibitem{Bil} P.~Billingsley, \emph{Convergence of Probability Measures}, 2nd ed., Wiley, New York, 1999. doi:10.1002/9780470316962.
+\bibitem{GL} H.~U.~Gerber and S.-Y.~R.~Li, \emph{The occurrence of sequence patterns in repeated experiments and hitting times in a Markov chain}, Stochastic Process.\ Appl.\ \textbf{11} (1981), 101--108. doi:10.1016/0304-4149(81)90025-9.
+\bibitem{GO} L.~J.~Guibas and A.~M.~Odlyzko, \emph{String overlaps, pattern matching, and nontransitive games}, J.\ Combin.\ Theory Ser.\ A \textbf{30} (1981), 183--208. doi:10.1016/0097-3165(81)90005-4.
+\bibitem{KM} S.~Karlin and J.~McGregor, \emph{Coincidence probabilities}, Pacific J.\ Math.\ \textbf{9} (1959), 1141--1164. doi:10.2140/pjm.1959.9.1141.
+\bibitem{Li} S.-Y.~R.~Li, \emph{A martingale approach to the study of occurrence of sequence patterns in repeated experiments}, Ann.\ Probab.\ \textbf{8} (1980), 1171--1176. doi:10.1214/aop/1176994578.
+\bibitem{PT} J.~Pitman and W.~Tang, \emph{Patterns in random walks and Brownian motion}, preprint, arXiv:1411.0041v3, 2014.
+\bibitem{PTpub} J.~Pitman and W.~Tang, \emph{Patterns in random walks and Brownian motion}, in: In Memoriam Marc Yor -- S\'eminaire de Probabilit\'es XLVII, Lecture Notes in Math.\ \textbf{2137}, Springer, Cham, 2015, 49--88. doi:10.1007/978-3-319-18585-9\_4.
+\bibitem{PTS} J.~Pitman and W.~Tang, \emph{The Slepian zero set, and Brownian bridge embedded in Brownian motion by a spacetime shift}, Electron.\ J.\ Probab.\ \textbf{20} (2015), 1--28. doi:10.1214/EJP.v20-3911.
+\bibitem{Shepp} L.~A.~Shepp, \emph{First passage time for a particular Gaussian process}, Ann.\ Math.\ Statist.\ \textbf{42} (1971), 946--951. doi:10.1214/aoms/1177693323.
+\bibitem{Shm} Y.~Shmalo, \emph{The waiting time for a first-passage pattern in simple random walk}, preprint, 2026, \url{https://github.com/yspennstate/first-passage-pattern-waiting-time}.
+\bibitem{Slepian} D.~Slepian, \emph{First passage time for a particular Gaussian process}, Ann.\ Math.\ Statist.\ \textbf{32} (1961), 610--612. doi:10.1214/aoms/1177705068.
+\bibitem{MathBrainRepo} Y.~Shmalo, \emph{Math Brain: public snapshot, code and tests}, 2026. doi:10.5281/zenodo.24150837.
+\bibitem{MathBrainPaper} Y.~Shmalo, \emph{Math Brain: shared, auditable memory for multi-agent mathematical research}, October 2026, \url{https://github.com/yspennstate/math-brain-public/tree/main/papers/math-brain-2026-10-24}.
+\bibitem{BrainFramework} Y.~Shmalo, \emph{Brain Framework}, public software repository, 2026, \url{https://github.com/yspennstate/brain-framework-public}.
+\end{thebibliography}
+\end{document}

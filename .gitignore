@@ -1,0 +1,5 @@
+*.aux
+*.log
+*.out
+code/simulate
+__pycache__/
