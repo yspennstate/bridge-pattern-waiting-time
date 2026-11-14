@@ -67,7 +67,7 @@ Convergence in law alone gives only $\liminf_n\EE T_n/n\ge\gamma_\lambda$, by Fa
 \begin{equation}\label{eq:tail-intro}
 \PP(F_n>kn)\le\PP(S_n<\lambda_n)^{k+1}+\PP(S_n>\lambda_n)^{k+1},\qquad k\ge0,
 \end{equation}
-and the right side is at most $2\rho^{k+1}$ for some $\rho<1$ and all large $n$. The same lattice structure makes the first hitting time of $\lambda_n/\sqrt n$ by the scaled window sums exactly $F_n/n$, so the first hitting time passes to the limit as soon as the Slepian process crosses the level immediately after hitting it, which follows from its local absolute continuity with respect to Brownian motion \cite[Lemma~2.3]{PTS}.
+and the right side is at most $2\rho^{k+1}$ for some $\rho<1$ and all large $n$. The same lattice structure makes the first hitting time of $\lambda_n/\sqrt n$ by the scaled window sums exactly $F_n/n$, so the first hitting time passes to the limit as soon as the Slepian process crosses the level immediately after hitting it, which follows from its local absolute continuity with respect to Brownian motion \cite[Lemma~4.3]{PTS}.
 
 The constant can be written out. Let $\phi_t(x)=(2\pi t)^{-1/2}e^{-x^2/(2t)}$, $\phi=\phi_1$, and let $\Phi$ be the standard normal distribution function. For $h\in\R$, an integer $m\ge0$ and $0<\theta<1$, put $x_0=0$ and
 \begin{equation}\label{eq:H}
@@ -173,7 +173,7 @@ For $s=2k$ and $b=2j$ with $0\le j\le k$,
 \]
 and $j^2/(2k)=b^2/(4s)$; the odd case is the same with $p_{2k+1}(1)$ in place of $p_{2k}(0)$ and gives $e^{-(b^2-1)/(4s)}$. Since $p_s(0)$ and $p_s(1)$ are at most $Cs^{-1/2}$ by Stirling's formula, and $p_s(-b)=p_s(b)$, this proves \eqref{eq:gauss}. Second, the local limit theorem: for every $\delta\in(0,1]$,
 \begin{equation}\label{eq:llt}
-\sup_{\delta n\le s\le n}\ \sup_{b\equiv s\ (2)}\bigl|\sqrt n\,p_s(b)-2\phi_{s/n}(b/\sqrt n)\bigr|\	o0\qquad(n\to\infty).
+\sup_{\delta n\le s\le n}\ \sup_{b\equiv s\ (2)}\bigl|\sqrt n\,p_s(b)-2\phi_{s/n}(b/\sqrt n)\bigr|\to0\qquad(n\to\infty).
 \end{equation}
 Indeed $\phi_{s/n}(b/\sqrt n)=\sqrt n\,\phi_s(b)$, Stirling's formula gives $p_s(b)=2\phi_s(b)(1+o(1))$ uniformly in $|b|\le K\sqrt s$ as $s\to\infty$, and for $|b|>K\sqrt s$ both $\sqrt n\,p_s(b)$ and $2\sqrt n\,\phi_s(b)$ are at most $C\delta^{-1/2}e^{-K^2/4}$ by \eqref{eq:gauss}; then let $K\to\infty$. In particular $\sqrt n\,p_n(\lambda_n)\to2\phi(\lambda)$.
 
@@ -190,7 +190,7 @@ Let $Z$ and $F_\lambda$ be as in Section~\ref{sec:intro}.
 \end{lemma}
 
 \begin{proof}
-Part (1) holds because $Z(j)$ is the increment of $B$ over $[j,j+1]$. Part (2) is \cite[Lemma~2.3]{PTS} (see also \cite[Lemma~2.5]{PT}); we include the short argument. By stationarity take $t=0$. Write $B(u)=uU+U^\circ(u)$ and $B(1+u)-B(1)=uV+V^\circ(u)$ for $0\le u\le1$, where $U=B(1)$, $V=B(2)-B(1)$, and $U^\circ,V^\circ$ are standard Brownian bridges; the four are independent. Then
+Part (1) holds because $Z(j)$ is the increment of $B$ over $[j,j+1]$. Part (2) is \cite[Lemma~4.3]{PTS} (see also \cite[Lemma~2.5]{PT}); we include the short argument. By stationarity take $t=0$. Write $B(u)=uU+U^\circ(u)$ and $B(1+u)-B(1)=uV+V^\circ(u)$ for $0\le u\le1$, where $U=B(1)$, $V=B(2)-B(1)$, and $U^\circ,V^\circ$ are standard Brownian bridges; the four are independent. Then
 \[
 Z(u)=(1-u)U+uV+V^\circ(u)-U^\circ(u),\qquad 0\le u\le1,
 \]
@@ -208,7 +208,7 @@ F_n/n=\inf\{t\ge0:Z_n(t)=\lambda_n/\sqrt n\}.
 
 \emph{Convergence in law.} By Donsker's theorem \cite{Bil}, $\widehat S_n\to B$ in law in $C[0,\infty)$ with the topology of uniform convergence on compact sets. By the Skorokhod representation theorem \cite{Bil} we may assume that $\widehat S_n\to B$ almost surely, uniformly on compact sets; then $Z_n\to Z$ in the same way, and $\lambda_n/\sqrt n\to\lambda$. On the almost sure event of Lemma~\ref{lem:slepian}(3), $F_n/n\to F_\lambda$. Indeed, fix $\varepsilon>0$. The continuous function $Z-\lambda$ has no zero on the compact set $[0,F_\lambda-\varepsilon]$, so $|Z_n-\lambda_n/\sqrt n|$ is bounded below there for large $n$, and $F_n/n>F_\lambda-\varepsilon$. There is a time $u\in(F_\lambda,F_\lambda+\varepsilon)$ at which $Z(u)-\lambda$ has the sign opposite to that of $Z(0)-\lambda$; for large $n$ the same holds for $Z_n(u)-\lambda_n/\sqrt n$ and $Z_n(0)-\lambda_n/\sqrt n$, so $F_n/n<F_\lambda+\varepsilon$ by the intermediate value theorem. Moreover
 \begin{equation}\label{eq:after}
-W_n^*(u):=\widehat S_n(F_n/n+u)-\widehat S_n(F_n/n)\	o W^*(u)=B(F_\lambda+u)-B(F_\lambda)
+W_n^*(u):=\widehat S_n(F_n/n+u)-\widehat S_n(F_n/n)\to W^*(u)=B(F_\lambda+u)-B(F_\lambda)
 \end{equation}
 uniformly in $u\in[0,1]$, by the uniform convergence of $\widehat S_n$ on compact sets and the uniform continuity of $B$. In particular $T_n/n=1+F_n/n\to1+F_\lambda$ in law.
 
@@ -247,7 +247,7 @@ uniformly in $s$. The function $(t,x)\mapsto\phi_t(x)$ is uniformly continuous o
 \begin{proof}[Proof of Corollary~\ref{cor:matching}]
 By Lemma~\ref{lem:matching}, $n2^{-n}\one^\top M_n^{-1}\one=n/\EE T_n$, which tends to $1/\gamma_\lambda$ by Theorem~\ref{thm:main}. The word $W_n$ formed at time $T_n$ is $(S_{F_n+i}-S_{F_n})_{0\le i\le n}$, so $\widehat W_n=W_n^*$. In the coupling of Section~\ref{sec:proof}, $W_n^*\to W^*$ uniformly on $[0,1]$ almost surely by \eqref{eq:after}, so $n^{-1/2}C_n(W_n)\to K(W^*)$ almost surely by Lemma~\ref{lem:riemann}, and by bounded convergence $n^{-1/2}\EE C_n(W_n)\to\EE K(W^*)$. By \eqref{eq:mean-col},
 \[
-\frac{\EE T_n}n=\frac{n^{-1/2}\,\EE C_n(W_n)}{\sqrt n\,p_n(\lambda_n)}\	o\frac{\EE K(W^*)}{2\phi(\lambda)},
+\frac{\EE T_n}n=\frac{n^{-1/2}\,\EE C_n(W_n)}{\sqrt n\,p_n(\lambda_n)}\to\frac{\EE K(W^*)}{2\phi(\lambda)},
 \]
 and comparing with \eqref{eq:main} gives \eqref{eq:weights}.
 \end{proof}
